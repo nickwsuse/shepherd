@@ -40,3 +40,27 @@ func GetSecretByName(client *rancher.Client, clusterID, namespace, secretName st
 	}
 	return newSecret, nil
 }
+
+// NewSecretTemplate is a constructor that creates a secret template
+func NewSecretTemplate(secretName string, secretType coreV1.SecretType, namespace string, annotations map[string]string, labels map[string]string, data map[string][]byte) coreV1.Secret {
+	if annotations == nil {
+		annotations = make(map[string]string)
+	}
+	if labels == nil {
+		labels = make(map[string]string)
+	}
+	if data == nil {
+		data = make(map[string][]byte)
+	}
+
+	return coreV1.Secret{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:        secretName,
+			Namespace:   namespace,
+			Annotations: annotations,
+			Labels:      labels,
+		},
+		Data: data,
+		Type: secretType,
+	}
+}
